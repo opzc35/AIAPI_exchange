@@ -750,51 +750,52 @@ function base64UrlEncode(bytes) {
 
 function renderAppHtml() {
   return `<!doctype html>
-<html lang=”zh-CN”>
+<html lang="zh-CN">
   <head>
-    <meta charset=”utf-8” />
-    <meta name=”viewport” content=”width=device-width,initial-scale=1” />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>AIAPI Exchange</title>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
       :root {
-        --bg: #000;
-        --bg-secondary: #111;
-        --panel: #0a0a0a;
-        --panel-hover: #171717;
-        --ink: #ededed;
-        --muted: #888;
-        --subtle: #666;
-        --line: #333;
-        --border: #1a1a1a;
-        --accent: #fff;
-        --accent-green: #0070f3;
-        --accent-blue: #7928ca;
+        --bg: #f6f9fc;
+        --panel: #fff;
+        --ink: #1a1f36;
+        --muted: #697386;
+        --subtle: #8792a2;
+        --border: #e3e8ee;
+        --line: #c1c9d2;
+        --accent: #635bff;
+        --accent-light: #e6e8ff;
+        --accent-hover: #7a73ff;
+        --success: #3ecf8e;
+        --success-light: #e6f9f0;
         --warn: #f5a623;
-        --error: #ee0000;
-        --success: #0070f3;
-        --radius: 8px;
-        --radius-lg: 12px;
-        --radius-xl: 16px;
+        --warn-light: #fef4e8;
+        --error: #df1b41;
+        --error-light: #fde8ee;
+        --radius: 6px;
+        --radius-lg: 8px;
+        --shadow: 0 1px 3px rgba(50,50,93,.08), 0 1px 1px rgba(0,0,0,.05);
+        --shadow-lg: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
       }
 
       * { box-sizing: border-box; margin: 0; padding: 0; }
 
       body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         color: var(--ink);
         background: var(--bg);
         min-height: 100vh;
         -webkit-font-smoothing: antialiased;
       }
 
-      a { color: var(--accent-blue); text-decoration: none; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
 
       .shell {
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
-        padding: 40px 24px;
+        padding: 0 24px;
       }
 
       /* Header */
@@ -803,28 +804,29 @@ function renderAppHtml() {
         align-items: center;
         justify-content: space-between;
         padding: 16px 0;
-        border-bottom: 1px solid var(--line);
-        margin-bottom: 48px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 32px;
       }
       .header-logo {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
       }
       .header-logo-icon {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
-        border-radius: 8px;
+        width: 28px;
+        height: 28px;
+        background: var(--accent);
+        border-radius: 6px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 12px;
         color: #fff;
       }
       .header-title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
         color: var(--ink);
       }
@@ -834,94 +836,98 @@ function renderAppHtml() {
         align-items: center;
       }
 
-      /* Hero */
-      .hero {
-        padding: 48px 0;
-        border-bottom: 1px solid var(--line);
-        margin-bottom: 48px;
-      }
-      .hero h1 {
-        font-size: clamp(36px, 5vw, 60px);
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.04em;
-        color: var(--ink);
-        margin-bottom: 16px;
-      }
-      .hero-desc {
-        color: var(--muted);
-        font-size: 16px;
-        line-height: 1.6;
-        max-width: 600px;
-      }
-
       /* Badge */
       .badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
+        gap: 4px;
+        padding: 3px 10px;
         font-size: 12px;
         font-weight: 500;
         border-radius: 999px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--border);
         color: var(--muted);
-        background: var(--panel);
+        background: var(--bg);
       }
-      .badge-green {
-        color: var(--accent-green);
-        border-color: rgba(0,112,243,0.3);
-        background: rgba(0,112,243,0.08);
+      .badge-admin {
+        color: var(--accent);
+        border-color: var(--accent-light);
+        background: var(--accent-light);
       }
-      .badge-warn {
-        color: var(--warn);
-        border-color: rgba(245,166,35,0.3);
-        background: rgba(245,166,35,0.08);
+      .badge-success {
+        color: var(--success);
+        border-color: var(--success-light);
+        background: var(--success-light);
+      }
+
+      /* Nav Tabs */
+      .nav-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 24px;
+      }
+      .nav-tab {
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: color 0.15s, border-color 0.15s;
+        user-select: none;
+      }
+      .nav-tab:hover {
+        color: var(--ink);
+      }
+      .nav-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
       }
 
       /* Grid */
-      .grid {
+      .grid-2 {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        grid-template-columns: 1fr 1fr;
         gap: 16px;
       }
-      .grid-full {
+      .grid-3 {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 16px;
       }
 
-      /* Panel / Card */
+      /* Panel */
       .panel {
         background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-xl);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
         padding: 24px;
+        box-shadow: var(--shadow);
       }
 
-      /* Section titles */
-      h2 {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--ink);
-        margin-bottom: 20px;
-        letter-spacing: -0.02em;
+      /* Section */
+      .section {
+        margin-bottom: 24px;
       }
-      h3 {
-        font-size: 14px;
+
+      /* Titles */
+      h2 {
+        font-size: 18px;
         font-weight: 600;
         color: var(--ink);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
       }
 
       /* Form */
       form {
         display: grid;
-        gap: 16px;
+        gap: 14px;
       }
       label {
         display: grid;
-        gap: 6px;
+        gap: 4px;
         font-size: 13px;
         font-weight: 500;
         color: var(--muted);
@@ -930,72 +936,68 @@ function renderAppHtml() {
       /* Input */
       input, select, textarea {
         width: 100%;
-        padding: 10px 12px;
-        font-family: 'Inter', sans-serif;
+        padding: 8px 12px;
         font-size: 14px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--border);
         border-radius: var(--radius);
-        background: var(--bg);
+        background: var(--panel);
         color: var(--ink);
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
       }
       input:focus, select:focus, textarea:focus {
-        border-color: var(--accent-green);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-light);
       }
       textarea {
-        min-height: 140px;
+        min-height: 120px;
         resize: vertical;
-        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
         font-size: 13px;
         line-height: 1.5;
+        background: var(--bg);
       }
 
       /* Button */
       button {
-        font-family: 'Inter', sans-serif;
         font-size: 14px;
         font-weight: 500;
-        border: 1px solid var(--line);
+        border: 1px solid var(--accent);
         border-radius: var(--radius);
-        padding: 10px 20px;
+        padding: 8px 18px;
         cursor: pointer;
-        transition: all 0.15s ease;
-        background: var(--ink);
-        color: var(--bg);
+        transition: background 0.15s, box-shadow 0.15s;
+        background: var(--accent);
+        color: #fff;
       }
       button:hover {
-        background: #ccc;
+        background: var(--accent-hover);
+        box-shadow: var(--shadow-lg);
       }
-      button[type=”submit”] {
-        background: var(--ink);
-        color: var(--bg);
-        border-color: var(--ink);
+      .btn-outline {
+        background: var(--panel);
+        color: var(--accent);
+        border-color: var(--border);
       }
-      button[type=”submit”]:hover {
-        background: #ccc;
-        border-color: #ccc;
+      .btn-outline:hover {
+        background: var(--accent-light);
+        color: var(--accent);
+        border-color: var(--accent);
+        box-shadow: none;
       }
-      .ghost {
+      .btn-ghost {
         background: transparent;
         color: var(--muted);
-        border: 1px solid var(--line);
+        border-color: var(--border);
       }
-      .ghost:hover {
-        background: var(--panel-hover);
+      .btn-ghost:hover {
+        background: var(--bg);
         color: var(--ink);
-        border-color: #444;
+        border-color: var(--line);
+        box-shadow: none;
       }
 
-      /* Row / Flex */
-      .row {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      /* Info pills */
+      /* Info row */
       .info-row {
         display: flex;
         gap: 12px;
@@ -1003,65 +1005,63 @@ function renderAppHtml() {
         flex-wrap: wrap;
         margin-bottom: 16px;
       }
-      .info-item {
-        font-size: 14px;
-        color: var(--muted);
-      }
-      .info-item strong {
-        color: var(--ink);
-      }
 
-      /* Card list */
-      .cards {
-        display: grid;
-        gap: 8px;
-      }
-      .card {
-        padding: 16px;
-        border-radius: var(--radius);
+      /* Table */
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        background: var(--bg-secondary);
-        transition: border-color 0.15s;
+        background: var(--panel);
       }
-      .card:hover {
-        border-color: var(--line);
-      }
-      .card-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--ink);
-        margin-bottom: 6px;
-      }
-      .meta {
-        color: var(--subtle);
+      table {
+        width: 100%;
+        border-collapse: collapse;
         font-size: 13px;
-        line-height: 1.5;
       }
-      .meta span {
+      thead th {
+        font-weight: 600;
         color: var(--muted);
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+        font-size: 12px;
+        letter-spacing: 0.02em;
+      }
+      tbody td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--ink);
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr:hover {
+        background: var(--bg);
       }
 
-      /* Terminal / Pre */
+      /* Pre / Terminal */
       pre {
         margin: 0;
         padding: 16px;
-        border-radius: var(--radius);
-        background: #0a0a0a;
+        border-radius: var(--radius-lg);
+        background: #1a1f36;
         border: 1px solid var(--border);
-        color: #ccc;
+        color: #cdd6e4;
         overflow: auto;
-        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
         font-size: 13px;
         line-height: 1.6;
+        box-shadow: var(--shadow);
       }
 
       /* Notice */
       .notice {
-        padding: 12px 16px;
+        padding: 10px 14px;
         border-radius: var(--radius);
-        border: 1px solid rgba(245,166,35,0.2);
-        background: rgba(245,166,35,0.06);
-        color: var(--warn);
+        border: 1px solid var(--warn-light);
+        background: var(--warn-light);
+        color: #9a6b1e;
         font-size: 13px;
         line-height: 1.5;
       }
@@ -1070,57 +1070,17 @@ function renderAppHtml() {
       .error {
         color: var(--error);
         font-size: 13px;
+        margin-top: 8px;
       }
 
       /* Divider */
       .divider {
         border: 0;
-        border-top: 1px solid var(--line);
+        border-top: 1px solid var(--border);
         margin: 24px 0;
       }
 
-      /* Tabs */
-      .tabs {
-        display: flex;
-        gap: 0;
-        border-bottom: 1px solid var(--line);
-        margin-bottom: 24px;
-      }
-      .tab {
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--muted);
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        transition: all 0.15s;
-      }
-      .tab:hover {
-        color: var(--ink);
-      }
-      .tab.active {
-        color: var(--ink);
-        border-bottom-color: var(--ink);
-      }
-
-      .hidden { display: none !important; }
-
-      /* Auth forms side-by-side */
-      .auth-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-      }
-
-      /* Section spacing */
-      .section {
-        margin-bottom: 32px;
-      }
-      .section:last-child {
-        margin-bottom: 0;
-      }
-
-      /* Empty state */
+      /* Empty */
       .empty {
         padding: 32px 0;
         text-align: center;
@@ -1128,214 +1088,256 @@ function renderAppHtml() {
         font-size: 14px;
       }
 
-      /* Table */
-      .table-wrap {
-        overflow-x: auto;
+      /* Auth */
+      .auth-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 48px 0;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-      }
-      th {
-        font-weight: 500;
-        color: var(--muted);
-        text-align: left;
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--line);
-        font-size: 12px;
-      }
-      td {
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--border);
-        color: var(--ink);
+      .auth-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 600px;
       }
 
-      @media (max-width: 720px) {
-        .shell { padding: 24px 16px; }
-        .hero h1 { font-size: 32px; }
-        .auth-grid { grid-template-columns: 1fr; }
-        .grid { grid-template-columns: 1fr; }
+      /* Status dot */
+      .status-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+      .status-dot.success { background: var(--success); }
+      .status-dot.error { background: var(--error); }
+      .status-dot.warn { background: var(--warn); }
+
+      .hidden { display: none !important; }
+
+      @media (max-width: 640px) {
+        .shell { padding: 0 16px; }
+        .auth-grid { grid-template-columns: 1fr; max-width: 100%; }
+        .grid-2 { grid-template-columns: 1fr; }
+        .grid-3 { grid-template-columns: 1fr; }
         .panel { padding: 16px; }
+        .nav-tabs { flex-wrap: wrap; }
+        .nav-tab { padding: 8px 12px; font-size: 13px; }
       }
     </style>
   </head>
   <body>
-    <main class=”shell”>
+    <main class="shell">
       <!-- Header -->
-      <div class=”header”>
-        <div class=”header-logo”>
-          <div class=”header-logo-icon”>AI</div>
-          <span class=”header-title”>AIAPI Exchange</span>
+      <header class="header">
+        <div class="header-logo">
+          <div class="header-logo-icon">AI</div>
+          <span class="header-title">AIAPI Exchange</span>
         </div>
-        <div class=”header-actions” id=”headerActions”>
-          <span class=”badge badge-green hidden” id=”meAdmin”>Admin</span>
-          <span class=”info-item hidden” id=”headerBalance”>--</span>
-          <button class=”ghost hidden” id=”logoutButton” type=”button”>Logout</button>
+        <div class="header-actions" id="headerActions">
+          <span class="badge badge-admin hidden" id="meAdmin">Admin</span>
+          <span class="badge badge-success hidden" id="headerBalance">--</span>
+          <button class="btn-ghost hidden" id="logoutButton" type="button">Logout</button>
         </div>
-      </div>
+      </header>
 
       <!-- Auth Panel -->
-      <section class=”section hidden” id=”authPanel”>
-        <div class=”auth-grid”>
-          <div class=”panel”>
-            <h2>Create Account</h2>
-            <form id=”registerForm”>
-              <label>Email<input name=”email” type=”email” required /></label>
-              <label>Password<input name=”password” type=”password” minlength=”8” required /></label>
-              <button type=”submit”>Register</button>
-            </form>
-            <p class=”error” id=”authError”></p>
-          </div>
-          <div class=”panel”>
-            <h2>Login</h2>
-            <form id=”loginForm”>
-              <label>Email<input name=”email” type=”email” required /></label>
-              <label>Password<input name=”password” type=”password” required /></label>
-              <button type=”submit”>Login</button>
-            </form>
+      <section class="hidden" id="authPanel">
+        <div class="auth-wrap">
+          <div class="auth-grid">
+            <div class="panel">
+              <h2>Create Account</h2>
+              <form id="registerForm">
+                <label>Email<input name="email" type="email" required /></label>
+                <label>Password<input name="password" type="password" minlength="8" required /></label>
+                <button type="submit">Register</button>
+              </form>
+              <p class="error" id="authError"></p>
+            </div>
+            <div class="panel">
+              <h2>Login</h2>
+              <form id="loginForm">
+                <label>Email<input name="email" type="email" required /></label>
+                <label>Password<input name="password" type="password" required /></label>
+                <button type="submit">Login</button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Account info -->
-      <section class=”section hidden” id=”accountPanel”>
-        <div class=”info-row”>
-          <span class=”badge” id=”meEmail”>--</span>
-          <span class=”badge badge-green” id=”meBalanceBadge”>Balance: 0</span>
+      <!-- Logged-in content -->
+      <section class="hidden" id="loggedInContent">
+        <!-- Account info bar -->
+        <div class="info-row">
+          <span class="badge" id="meEmail">--</span>
+          <span class="badge badge-success" id="meBalanceBadge">Balance: 0</span>
+          <button class="btn-ghost" id="refreshButton" type="button">Refresh</button>
         </div>
-        <div class=”row” style=”margin-top: 8px;”>
-          <button class=”ghost” id=”refreshButton” type=”button”>Refresh</button>
-        </div>
-        <p class=”notice” style=”margin-top: 16px;”>Billing unit is “cents”. 123 cents = 1.23 yuan. Powered by Cloudflare Workers + D1.</p>
-      </section>
+        <p class="notice">Billing unit is "cents". 123 cents = 1.23 yuan. Powered by Cloudflare Workers + D1.</p>
 
-      <hr class=”divider hidden” id=”mainDivider” />
+        <hr class="divider" />
 
-      <!-- Main Panel -->
-      <section class=”hidden” id=”mainPanel”>
-
-        <!-- Channel Upload -->
-        <div class=”section”>
-          <div class=”panel”>
-            <h2>Add Channel</h2>
-            <form id=”channelForm”>
-              <div class=”grid”>
-                <label>Name<input name=”name” required placeholder=”e.g. OpenAI Official” /></label>
-                <label>Provider
-                  <select name=”provider”>
-                    <option value=”openai”>OpenAI</option>
-                    <option value=”anthropic”>Anthropic</option>
-                  </select>
-                </label>
-                <label>Base URL<input name=”base_url” placeholder=”Default: official API address” /></label>
-                <label>Endpoint Path<input name=”endpoint_path” placeholder=”/v1/chat/completions” /></label>
-                <label>Default Model<input name=”default_model” placeholder=”e.g. gpt-4.1-mini” /></label>
-                <label>API Key<input name=”api_key” type=”password” required /></label>
-                <label>Input Price (cents / 1K tokens)<input name=”price_input_cents_per_1k” type=”number” min=”0” value=”1” required /></label>
-                <label>Output Price (cents / 1K tokens)<input name=”price_output_cents_per_1k” type=”number” min=”0” value=”2” required /></label>
-              </div>
-              <button type=”submit” style=”margin-top: 16px;”>Save Channel</button>
-            </form>
-            <p class=”error” id=”channelError”></p>
-          </div>
+        <!-- Nav Tabs -->
+        <div class="nav-tabs" id="navTabs">
+          <div class="nav-tab active" data-tab="dashboard" onclick="switchTab('dashboard')">Dashboard</div>
+          <div class="nav-tab" data-tab="channels" onclick="switchTab('channels')">Channels</div>
+          <div class="nav-tab" data-tab="proxy" onclick="switchTab('proxy')">Proxy</div>
+          <div class="nav-tab hidden" id="adminTab" data-tab="admin" onclick="switchTab('admin')">Admin</div>
         </div>
 
-        <!-- Available Channels -->
-        <div class=”section”>
-          <h2>Available Channels</h2>
-          <div class=”cards” id=”channelsList”></div>
-        </div>
-
-        <!-- Proxy -->
-        <div class=”section”>
-          <div class=”panel”>
-            <h2>Proxy Request</h2>
-            <form id=”proxyForm”>
-              <label>Channel
-                <select name=”channel_id” id=”proxyChannelSelect”></select>
-              </label>
-              <label>JSON Payload
-                <textarea name=”payload” id=”payloadInput”>{ “messages”: [{ “role”: “user”, “content”: “Hello” }] }</textarea>
-              </label>
-              <button type=”submit”>Send Request</button>
-            </form>
-            <p class=”error” id=”proxyError”></p>
-            <pre id=”proxyOutput” style=”margin-top: 16px;”>Awaiting response...</pre>
-          </div>
-        </div>
-
-        <!-- My Channels -->
-        <div class=”section”>
-          <h2>My Channels</h2>
-          <div class=”cards” id=”myChannelsList”></div>
-        </div>
-
-        <!-- Recent Usage -->
-        <div class=”section”>
-          <h2>Recent Usage</h2>
-          <div class=”cards” id=”usageList”></div>
-        </div>
-
-        <!-- Admin Panel -->
-        <div class=”section hidden” id=”adminPanel”>
-          <div class=”panel”>
-            <h2>Admin \u2014 Credit Management</h2>
-            <form id=”creditForm”>
-              <div class=”grid”>
-                <label>User
-                  <select name=”user_id” id=”creditUserSelect”></select>
-                </label>
-                <label>Amount (cents, can be negative)<input name=”amount_cents” type=”number” value=”1000” required /></label>
-              </div>
-              <button type=”submit” style=”margin-top: 16px;”>Apply Credit</button>
-            </form>
-            <p class=”error” id=”creditError”></p>
-          </div>
-          <div style=”margin-top: 16px;”>
-            <div class=”table-wrap”>
+        <!-- Dashboard Tab -->
+        <div class="tab-content" id="tab-dashboard">
+          <div class="section">
+            <h2>Available Channels</h2>
+            <div class="table-wrap">
               <table>
                 <thead>
-                  <tr><th>Email</th><th>Role</th><th>Balance</th></tr>
+                  <tr><th>Name</th><th>Provider</th><th>Model</th><th>Endpoint</th><th>Input Price</th><th>Output Price</th></tr>
                 </thead>
-                <tbody id=”usersList”></tbody>
+                <tbody id="channelsList"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="section">
+            <h2>Recent Usage</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Channel</th><th>Model</th><th>Input</th><th>Output</th><th>Cost</th><th>Status</th></tr>
+                </thead>
+                <tbody id="usageList"></tbody>
               </table>
             </div>
           </div>
         </div>
 
+        <!-- Channels Tab -->
+        <div class="tab-content hidden" id="tab-channels">
+          <div class="section">
+            <div class="panel">
+              <h2>Add Channel</h2>
+              <form id="channelForm">
+                <div class="grid-2">
+                  <label>Name<input name="name" required placeholder="e.g. OpenAI Official" /></label>
+                  <label>Provider
+                    <select name="provider">
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic</option>
+                    </select>
+                  </label>
+                  <label>Base URL<input name="base_url" placeholder="Default: official API address" /></label>
+                  <label>Endpoint Path<input name="endpoint_path" placeholder="/v1/chat/completions" /></label>
+                  <label>Default Model<input name="default_model" placeholder="e.g. gpt-4.1-mini" /></label>
+                  <label>API Key<input name="api_key" type="password" required /></label>
+                  <label>Input Price (cents/1K tokens)<input name="price_input_cents_per_1k" type="number" min="0" value="1" required /></label>
+                  <label>Output Price (cents/1K tokens)<input name="price_output_cents_per_1k" type="number" min="0" value="2" required /></label>
+                </div>
+                <button type="submit" style="margin-top:12px;">Save Channel</button>
+              </form>
+              <p class="error" id="channelError"></p>
+            </div>
+          </div>
+          <div class="section">
+            <h2>My Channels</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Name</th><th>Provider</th><th>Model</th><th>Endpoint</th></tr>
+                </thead>
+                <tbody id="myChannelsList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proxy Tab -->
+        <div class="tab-content hidden" id="tab-proxy">
+          <div class="section">
+            <div class="panel">
+              <h2>Proxy Request</h2>
+              <form id="proxyForm">
+                <label>Channel
+                  <select name="channel_id" id="proxyChannelSelect"></select>
+                </label>
+                <label>JSON Payload
+                  <textarea name="payload" id="payloadInput">{ "messages": [{ "role": "user", "content": "Hello" }] }</textarea>
+                </label>
+                <button type="submit">Send Request</button>
+              </form>
+              <p class="error" id="proxyError"></p>
+              <pre id="proxyOutput" style="margin-top:16px;">Awaiting response...</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div class="tab-content hidden" id="tab-admin">
+          <div class="section">
+            <div class="panel">
+              <h2>Admin \u2014 Credit Management</h2>
+              <form id="creditForm">
+                <div class="grid-2">
+                  <label>User
+                    <select name="user_id" id="creditUserSelect"></select>
+                  </label>
+                  <label>Amount (cents, can be negative)<input name="amount_cents" type="number" value="1000" required /></label>
+                </div>
+                <button type="submit" style="margin-top:12px;">Apply Credit</button>
+              </form>
+              <p class="error" id="creditError"></p>
+            </div>
+          </div>
+          <div class="section">
+            <h2>All Users</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Email</th><th>Role</th><th>Balance</th></tr>
+                </thead>
+                <tbody id="usersList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
 
     <script>
-      const state = { me: null, channels: [], users: [] };
+      const state = { me: null, channels: [], users: [], activeTab: "dashboard" };
       const el = (id) => document.getElementById(id);
+
+      function switchTab(tabName) {
+        state.activeTab = tabName;
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tabName));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.toggle("hidden", c.id !== "tab-" + tabName));
+      }
 
       async function api(path, options = {}) {
         const response = await fetch(path, {
-          credentials: “include”,
-          headers: { “Content-Type”: “application/json”, ...(options.headers || {}) },
+          credentials: "include",
+          headers: { "Content-Type": "application/json", ...(options.headers || {}) },
           ...options,
         });
         const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || “Request failed”);
+        if (!response.ok) throw new Error(data.error || "Request failed");
         return data;
       }
 
       function centsToText(cents) {
-        return (Number(cents || 0) / 100).toFixed(2) + “ yuan”;
+        return (Number(cents || 0) / 100).toFixed(2) + " yuan";
       }
 
       async function refreshApp() {
         try {
-          const me = await api(“/api/me”, { method: “GET” });
+          const me = await api("/api/me", { method: "GET" });
           state.me = me.user;
           state.myChannels = me.my_channels || [];
           state.usageLogs = me.usage_logs || [];
-          const channelData = await api(“/api/channels”, { method: “GET” });
+          const channelData = await api("/api/channels", { method: "GET" });
           state.channels = channelData.channels || [];
           if (state.me.is_admin) {
-            const admin = await api(“/api/admin/users”, { method: “GET” });
+            const admin = await api("/api/admin/users", { method: "GET" });
             state.users = admin.users || [];
           } else {
             state.users = [];
@@ -1349,146 +1351,147 @@ function renderAppHtml() {
 
       function render() {
         const loggedIn = Boolean(state.me);
-        el(“authPanel”).classList.toggle(“hidden”, loggedIn);
-        el(“accountPanel”).classList.toggle(“hidden”, !loggedIn);
-        el(“mainDivider”).classList.toggle(“hidden”, !loggedIn);
-        el(“mainPanel”).classList.toggle(“hidden”, !loggedIn);
-        el(“logoutButton”).classList.toggle(“hidden”, !loggedIn);
-        el(“headerBalance”).classList.toggle(“hidden”, !loggedIn);
+        el("authPanel").classList.toggle("hidden", loggedIn);
+        el("loggedInContent").classList.toggle("hidden", !loggedIn);
+        el("logoutButton").classList.toggle("hidden", !loggedIn);
+        el("headerBalance").classList.toggle("hidden", !loggedIn);
 
         if (!loggedIn) return;
 
-        el(“meEmail”).textContent = state.me.email;
-        el(“meBalanceBadge”).textContent = “Balance: “ + centsToText(state.me.balance_cents);
-        el(“headerBalance”).textContent = centsToText(state.me.balance_cents);
-        el(“meAdmin”).classList.toggle(“hidden”, !state.me.is_admin);
-        el(“adminPanel”).classList.toggle(“hidden”, !state.me.is_admin);
+        el("meEmail").textContent = state.me.email;
+        el("meBalanceBadge").textContent = "Balance: " + centsToText(state.me.balance_cents);
+        el("headerBalance").textContent = centsToText(state.me.balance_cents);
+        el("meAdmin").classList.toggle("hidden", !state.me.is_admin);
+        el("adminTab").classList.toggle("hidden", !state.me.is_admin);
 
-        el(“channelsList”).innerHTML = state.channels.length
-          ? state.channels.map(c => \`
-            <div class=”card”>
-              <div class=”card-title”>\${c.name}</div>
-              <div class=”meta”>Owner: <span>\${c.owner_email}</span> &middot; <span>\${c.provider}</span> &middot; <span>\${c.default_model || “default unset”}</span></div>
-              <div class=”meta”>\${c.base_url}\${c.endpoint_path}</div>
-              <div class=”meta”>Input: <span>\${c.price_input_cents_per_1k} cents/1K</span> &middot; Output: <span>\${c.price_output_cents_per_1k} cents/1K</span></div>
-            </div>
-          \`).join(“”)
-          : '<div class=”empty”>No channels available</div>';
+        if (!state.me.is_admin && state.activeTab === "admin") {
+          switchTab("dashboard");
+        }
 
-        el(“myChannelsList”).innerHTML = (state.myChannels || []).length
-          ? state.myChannels.map(c => \`
-            <div class=”card”>
-              <div class=”card-title”>\${c.name}</div>
-              <div class=”meta”><span>\${c.provider}</span> &middot; <span>\${c.default_model || “default unset”}</span></div>
-              <div class=”meta”>\${c.base_url}\${c.endpoint_path}</div>
-            </div>
-          \`).join(“”)
-          : '<div class=”empty”>You haven\\'t added any channels</div>';
+        el("channelsList").innerHTML = state.channels.length
+          ? state.channels.map(c => \`<tr>
+              <td>\${c.name}</td>
+              <td>\${c.provider}</td>
+              <td>\${c.default_model || "default"}</td>
+              <td style="font-size:12px;color:var(--subtle);">\${c.base_url}\${c.endpoint_path}</td>
+              <td>\${c.price_input_cents_per_1k}c/1K</td>
+              <td>\${c.price_output_cents_per_1k}c/1K</td>
+            </tr>\`).join("")
+          : '<tr><td colspan="6" class="empty">No channels available</td></tr>';
 
-        el(“usageList”).innerHTML = (state.usageLogs || []).length
-          ? state.usageLogs.map(item => \`
-            <div class=”card”>
-              <div class=”card-title”>#\${item.id} \${item.channel_name}</div>
-              <div class=”meta”>Model: <span>\${item.model || “unknown”}</span> &middot; In: <span>\${item.input_tokens}</span> &middot; Out: <span>\${item.output_tokens}</span></div>
-              <div class=”meta”>Cost: <span>\${centsToText(item.total_cost_cents)}</span> &middot; Status: <span>\${item.status}</span></div>
-            </div>
-          \`).join(“”)
-          : '<div class=”empty”>No usage logs yet</div>';
+        el("myChannelsList").innerHTML = (state.myChannels || []).length
+          ? state.myChannels.map(c => \`<tr>
+              <td>\${c.name}</td>
+              <td>\${c.provider}</td>
+              <td>\${c.default_model || "default"}</td>
+              <td style="font-size:12px;color:var(--subtle);">\${c.base_url}\${c.endpoint_path}</td>
+            </tr>\`).join("")
+          : '<tr><td colspan="4" class="empty">You haven\'t added any channels</td></tr>';
 
-        el(“proxyChannelSelect”).innerHTML = state.channels.map(c => \`<option value=”\${c.id}”>\${c.name} (#\${c.id})</option>\`).join(“”);
+        el("usageList").innerHTML = (state.usageLogs || []).length
+          ? state.usageLogs.map(item => \`<tr>
+              <td>\${item.id}</td>
+              <td>\${item.channel_name}</td>
+              <td>\${item.model || "unknown"}</td>
+              <td>\${item.input_tokens}</td>
+              <td>\${item.output_tokens}</td>
+              <td>\${centsToText(item.total_cost_cents)}</td>
+              <td><span class="status-dot \${item.status === 'success' ? 'success' : 'error'}"></span>\${item.status}</td>
+            </tr>\`).join("")
+          : '<tr><td colspan="7" class="empty">No usage logs yet</td></tr>';
+
+        el("proxyChannelSelect").innerHTML = state.channels.map(c => \`<option value="\${c.id}">\${c.name} (#\${c.id})</option>\`).join("");
 
         if (state.me.is_admin) {
-          el(“creditUserSelect”).innerHTML = state.users.map(u => \`<option value=”\${u.id}”>\${u.email} (\${centsToText(u.balance_cents)})</option>\`).join(“”);
-          el(“usersList”).innerHTML = state.users.map(u => \`
-            <tr>
+          el("creditUserSelect").innerHTML = state.users.map(u => \`<option value="\${u.id}">\${u.email} (\${centsToText(u.balance_cents)})</option>\`).join("");
+          el("usersList").innerHTML = state.users.map(u => \`<tr>
               <td>\${u.email}</td>
-              <td>\${u.is_admin ? “Admin” : “User”}</td>
+              <td>\${u.is_admin ? "Admin" : "User"}</td>
               <td>\${centsToText(u.balance_cents)}</td>
-            </tr>
-          \`).join(“”);
+            </tr>\`).join("");
         }
       }
 
-      el(“registerForm”).addEventListener(“submit”, async (event) => {
+      el("registerForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        el(“authError”).textContent = “”;
+        el("authError").textContent = "";
         const form = new FormData(event.target);
         try {
-          await api(“/api/auth/register”, {
-            method: “POST”,
-            body: JSON.stringify({ email: form.get(“email”), password: form.get(“password”) }),
+          await api("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) { el(“authError”).textContent = error.message; }
+        } catch (error) { el("authError").textContent = error.message; }
       });
 
-      el(“loginForm”).addEventListener(“submit”, async (event) => {
+      el("loginForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        el(“authError”).textContent = “”;
+        el("authError").textContent = "";
         const form = new FormData(event.target);
         try {
-          await api(“/api/auth/login”, {
-            method: “POST”,
-            body: JSON.stringify({ email: form.get(“email”), password: form.get(“password”) }),
+          await api("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) { el(“authError”).textContent = error.message; }
+        } catch (error) { el("authError").textContent = error.message; }
       });
 
-      el(“channelForm”).addEventListener(“submit”, async (event) => {
+      el("channelForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        el(“channelError”).textContent = “”;
+        el("channelError").textContent = "";
         const form = new FormData(event.target);
         try {
-          await api(“/api/channels”, {
-            method: “POST”,
+          await api("/api/channels", {
+            method: "POST",
             body: JSON.stringify(Object.fromEntries(form.entries())),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) { el(“channelError”).textContent = error.message; }
+        } catch (error) { el("channelError").textContent = error.message; }
       });
 
-      el(“proxyForm”).addEventListener(“submit”, async (event) => {
+      el("proxyForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        el(“proxyError”).textContent = “”;
+        el("proxyError").textContent = "";
         const form = new FormData(event.target);
         try {
-          const payload = JSON.parse(String(form.get(“payload”) || “{}”));
-          const data = await api(“/api/proxy/” + form.get(“channel_id”), {
-            method: “POST”,
+          const payload = JSON.parse(String(form.get("payload") || "{}"));
+          const data = await api("/api/proxy/" + form.get("channel_id"), {
+            method: "POST",
             body: JSON.stringify(payload),
           });
-          el(“proxyOutput”).textContent = JSON.stringify(data, null, 2);
+          el("proxyOutput").textContent = JSON.stringify(data, null, 2);
           await refreshApp();
-        } catch (error) { el(“proxyError”).textContent = error.message; }
+        } catch (error) { el("proxyError").textContent = error.message; }
       });
 
-      el(“creditForm”).addEventListener(“submit”, async (event) => {
+      el("creditForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        el(“creditError”).textContent = “”;
+        el("creditError").textContent = "";
         const form = new FormData(event.target);
         try {
-          await api(“/api/admin/credit”, {
-            method: “POST”,
+          await api("/api/admin/credit", {
+            method: "POST",
             body: JSON.stringify({
-              user_id: Number(form.get(“user_id”)),
-              amount_cents: Number(form.get(“amount_cents”)),
+              user_id: Number(form.get("user_id")),
+              amount_cents: Number(form.get("amount_cents")),
             }),
           });
           await refreshApp();
-        } catch (error) { el(“creditError”).textContent = error.message; }
+        } catch (error) { el("creditError").textContent = error.message; }
       });
 
-      el(“logoutButton”).addEventListener(“click”, async () => {
-        await api(“/api/auth/logout”, { method: “POST”, body: “{}” });
+      el("logoutButton").addEventListener("click", async () => {
+        await api("/api/auth/logout", { method: "POST", body: "{}" });
         state.me = null;
         render();
       });
 
-      el(“refreshButton”).addEventListener(“click”, refreshApp);
+      el("refreshButton").addEventListener("click", refreshApp);
 
       refreshApp();
     </script>

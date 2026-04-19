@@ -750,324 +750,592 @@ function base64UrlEncode(bytes) {
 
 function renderAppHtml() {
   return `<!doctype html>
-<html lang="zh-CN">
+<html lang=”zh-CN”>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset=”utf-8” />
+    <meta name=”viewport” content=”width=device-width,initial-scale=1” />
     <title>AIAPI Exchange</title>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
       :root {
-        --bg: #f2efe8;
-        --panel: rgba(255, 252, 246, 0.86);
-        --ink: #1c1917;
-        --muted: #6b6257;
-        --line: rgba(28, 25, 23, 0.12);
-        --accent: #0f766e;
-        --accent-strong: #115e59;
-        --warn: #b45309;
-        --error: #b91c1c;
-        --shadow: 0 20px 60px rgba(28, 25, 23, 0.12);
+        --bg: #000;
+        --bg-secondary: #111;
+        --panel: #0a0a0a;
+        --panel-hover: #171717;
+        --ink: #ededed;
+        --muted: #888;
+        --subtle: #666;
+        --line: #333;
+        --border: #1a1a1a;
+        --accent: #fff;
+        --accent-green: #0070f3;
+        --accent-blue: #7928ca;
+        --warn: #f5a623;
+        --error: #ee0000;
+        --success: #0070f3;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
       }
-      * { box-sizing: border-box; }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
       body {
-        margin: 0;
-        font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         color: var(--ink);
-        background:
-          radial-gradient(circle at top left, rgba(15, 118, 110, 0.18), transparent 30%),
-          radial-gradient(circle at bottom right, rgba(180, 83, 9, 0.14), transparent 26%),
-          linear-gradient(135deg, #f7f2e7 0%, #eee5d3 100%);
+        background: var(--bg);
         min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
       }
+
+      a { color: var(--accent-blue); text-decoration: none; }
+
       .shell {
-        width: min(1180px, calc(100% - 32px));
-        margin: 32px auto;
-        display: grid;
-        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
       }
-      .hero, .panel {
-        background: var(--panel);
-        backdrop-filter: blur(18px);
-        border: 1px solid var(--line);
-        border-radius: 22px;
-        box-shadow: var(--shadow);
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 48px;
       }
+      .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .header-logo-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #fff;
+      }
+      .header-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .header-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      /* Hero */
       .hero {
-        padding: 28px;
-        display: grid;
-        gap: 14px;
+        padding: 48px 0;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 48px;
       }
       .hero h1 {
-        margin: 0;
-        font-size: clamp(28px, 5vw, 54px);
-        line-height: 0.94;
+        font-size: clamp(36px, 5vw, 60px);
+        font-weight: 700;
+        line-height: 1.1;
         letter-spacing: -0.04em;
+        color: var(--ink);
+        margin-bottom: 16px;
       }
-      .hero p {
-        margin: 0;
+      .hero-desc {
         color: var(--muted);
-        max-width: 820px;
-        font-size: 15px;
+        font-size: 16px;
+        line-height: 1.6;
+        max-width: 600px;
       }
+
+      /* Badge */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: var(--panel);
+      }
+      .badge-green {
+        color: var(--accent-green);
+        border-color: rgba(0,112,243,0.3);
+        background: rgba(0,112,243,0.08);
+      }
+      .badge-warn {
+        color: var(--warn);
+        border-color: rgba(245,166,35,0.3);
+        background: rgba(245,166,35,0.08);
+      }
+
+      /* Grid */
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 16px;
       }
+      .grid-full {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      /* Panel / Card */
       .panel {
-        padding: 20px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        padding: 24px;
       }
-      h2, h3 {
-        margin: 0 0 12px;
-        font-size: 18px;
+
+      /* Section titles */
+      h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
       }
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 12px;
+      }
+
+      /* Form */
       form {
         display: grid;
-        gap: 10px;
+        gap: 16px;
       }
       label {
         display: grid;
         gap: 6px;
         font-size: 13px;
+        font-weight: 500;
         color: var(--muted);
       }
-      input, select, textarea, button {
-        font: inherit;
-      }
+
+      /* Input */
       input, select, textarea {
         width: 100%;
-        padding: 12px 13px;
+        padding: 10px 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
         border: 1px solid var(--line);
-        border-radius: 14px;
-        background: rgba(255,255,255,0.82);
+        border-radius: var(--radius);
+        background: var(--bg);
         color: var(--ink);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: var(--accent-green);
       }
       textarea {
-        min-height: 150px;
+        min-height: 140px;
         resize: vertical;
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 13px;
+        line-height: 1.5;
       }
+
+      /* Button */
       button {
-        border: 0;
-        border-radius: 999px;
-        background: var(--accent);
-        color: white;
-        padding: 12px 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 10px 20px;
         cursor: pointer;
-        transition: transform .15s ease, background .15s ease;
+        transition: all 0.15s ease;
+        background: var(--ink);
+        color: var(--bg);
       }
       button:hover {
-        background: var(--accent-strong);
-        transform: translateY(-1px);
+        background: #ccc;
+      }
+      button[type=”submit”] {
+        background: var(--ink);
+        color: var(--bg);
+        border-color: var(--ink);
+      }
+      button[type=”submit”]:hover {
+        background: #ccc;
+        border-color: #ccc;
       }
       .ghost {
         background: transparent;
-        color: var(--ink);
+        color: var(--muted);
         border: 1px solid var(--line);
       }
+      .ghost:hover {
+        background: var(--panel-hover);
+        color: var(--ink);
+        border-color: #444;
+      }
+
+      /* Row / Flex */
       .row {
         display: flex;
-        gap: 10px;
+        gap: 8px;
+        align-items: center;
         flex-wrap: wrap;
       }
-      .pill {
-        display: inline-flex;
+
+      /* Info pills */
+      .info-row {
+        display: flex;
+        gap: 12px;
         align-items: center;
-        gap: 8px;
-        padding: 9px 12px;
-        border-radius: 999px;
-        background: rgba(15, 118, 110, 0.08);
-        color: var(--accent-strong);
-        font-size: 13px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
       }
-      .hidden { display: none !important; }
+      .info-item {
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .info-item strong {
+        color: var(--ink);
+      }
+
+      /* Card list */
       .cards {
         display: grid;
-        gap: 12px;
+        gap: 8px;
       }
       .card {
-        padding: 14px;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,0.66);
+        padding: 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--bg-secondary);
+        transition: border-color 0.15s;
+      }
+      .card:hover {
+        border-color: var(--line);
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 6px;
       }
       .meta {
-        color: var(--muted);
+        color: var(--subtle);
         font-size: 13px;
+        line-height: 1.5;
       }
+      .meta span {
+        color: var(--muted);
+      }
+
+      /* Terminal / Pre */
       pre {
         margin: 0;
-        padding: 14px;
-        border-radius: 16px;
-        background: #171717;
-        color: #f5f5f5;
+        padding: 16px;
+        border-radius: var(--radius);
+        background: #0a0a0a;
+        border: 1px solid var(--border);
+        color: #ccc;
         overflow: auto;
-        font-size: 12px;
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 13px;
+        line-height: 1.6;
       }
+
+      /* Notice */
       .notice {
-        padding: 12px 14px;
-        border-radius: 14px;
-        background: rgba(180, 83, 9, 0.1);
+        padding: 12px 16px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(245,166,35,0.2);
+        background: rgba(245,166,35,0.06);
         color: var(--warn);
         font-size: 13px;
+        line-height: 1.5;
       }
+
+      /* Error */
       .error {
         color: var(--error);
         font-size: 13px;
       }
+
+      /* Divider */
+      .divider {
+        border: 0;
+        border-top: 1px solid var(--line);
+        margin: 24px 0;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 24px;
+      }
+      .tab {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s;
+      }
+      .tab:hover {
+        color: var(--ink);
+      }
+      .tab.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+
+      .hidden { display: none !important; }
+
+      /* Auth forms side-by-side */
+      .auth-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      /* Section spacing */
+      .section {
+        margin-bottom: 32px;
+      }
+      .section:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Empty state */
+      .empty {
+        padding: 32px 0;
+        text-align: center;
+        color: var(--subtle);
+        font-size: 14px;
+      }
+
+      /* Table */
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        font-weight: 500;
+        color: var(--muted);
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+      }
+      td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        color: var(--ink);
+      }
+
       @media (max-width: 720px) {
-        .shell { width: min(100% - 18px, 1180px); margin: 14px auto; }
-        .hero, .panel { border-radius: 18px; padding: 16px; }
+        .shell { padding: 24px 16px; }
+        .hero h1 { font-size: 32px; }
+        .auth-grid { grid-template-columns: 1fr; }
+        .grid { grid-template-columns: 1fr; }
+        .panel { padding: 16px; }
       }
     </style>
   </head>
   <body>
-    <main class="shell">
-      <section class="hero">
-        <div class="pill">Cloudflare Worker + D1</div>
-        <h1>AIAPI Exchange</h1>
-        <p>用户可以上传自己的 OpenAI / Anthropic 渠道并设置价格，其他用户统一调用；管理员负责为用户充值额度。第一个注册用户会自动成为管理员。</p>
-      </section>
-
-      <section class="grid">
-        <div class="panel" id="authPanel">
-          <h2>登录 / 注册</h2>
-          <div class="grid">
-            <form id="registerForm">
-              <h3>注册</h3>
-              <label>邮箱<input name="email" type="email" required /></label>
-              <label>密码<input name="password" type="password" minlength="8" required /></label>
-              <button type="submit">创建账号</button>
-            </form>
-            <form id="loginForm">
-              <h3>登录</h3>
-              <label>邮箱<input name="email" type="email" required /></label>
-              <label>密码<input name="password" type="password" required /></label>
-              <button type="submit">登录</button>
-            </form>
-          </div>
-          <p class="error" id="authError"></p>
+    <main class=”shell”>
+      <!-- Header -->
+      <div class=”header”>
+        <div class=”header-logo”>
+          <div class=”header-logo-icon”>AI</div>
+          <span class=”header-title”>AIAPI Exchange</span>
         </div>
+        <div class=”header-actions” id=”headerActions”>
+          <span class=”badge badge-green hidden” id=”meAdmin”>Admin</span>
+          <span class=”info-item hidden” id=”headerBalance”>--</span>
+          <button class=”ghost hidden” id=”logoutButton” type=”button”>Logout</button>
+        </div>
+      </div>
 
-        <div class="panel hidden" id="accountPanel">
-          <div class="row">
-            <div class="pill" id="meEmail">未登录</div>
-            <div class="pill" id="meBalance">额度: 0 分</div>
-            <div class="pill hidden" id="meAdmin">管理员</div>
+      <!-- Auth Panel -->
+      <section class=”section hidden” id=”authPanel”>
+        <div class=”auth-grid”>
+          <div class=”panel”>
+            <h2>Create Account</h2>
+            <form id=”registerForm”>
+              <label>Email<input name=”email” type=”email” required /></label>
+              <label>Password<input name=”password” type=”password” minlength=”8” required /></label>
+              <button type=”submit”>Register</button>
+            </form>
+            <p class=”error” id=”authError”></p>
           </div>
-          <div class="row" style="margin-top: 16px;">
-            <button class="ghost" id="refreshButton" type="button">刷新面板</button>
-            <button class="ghost" id="logoutButton" type="button">退出登录</button>
+          <div class=”panel”>
+            <h2>Login</h2>
+            <form id=”loginForm”>
+              <label>Email<input name=”email” type=”email” required /></label>
+              <label>Password<input name=”password” type=”password” required /></label>
+              <button type=”submit”>Login</button>
+            </form>
           </div>
-          <p class="notice">计费单位为“分”。例如 123 表示 1.23 元。当前实现使用 D1 + Worker，适合作为 Cloudflare MVP。</p>
         </div>
       </section>
 
-      <section class="grid hidden" id="mainPanel">
-        <div class="panel">
-          <h2>上传渠道</h2>
-          <form id="channelForm">
-            <label>渠道名称<input name="name" required placeholder="例如：OpenAI 官方 / 自建代理" /></label>
-            <label>供应商
-              <select name="provider">
-                <option value="openai">OpenAI</option>
-                <option value="anthropic">Anthropic</option>
-              </select>
-            </label>
-            <label>基础地址<input name="base_url" placeholder="默认自动填官方地址" /></label>
-            <label>接口路径<input name="endpoint_path" placeholder="/v1/chat/completions 或 /v1/messages" /></label>
-            <label>默认模型<input name="default_model" placeholder="例如 gpt-4.1-mini / claude-sonnet-4-5" /></label>
-            <label>渠道 API Key<input name="api_key" type="password" required /></label>
-            <label>输入价格（分 / 1K tokens）<input name="price_input_cents_per_1k" type="number" min="0" value="1" required /></label>
-            <label>输出价格（分 / 1K tokens）<input name="price_output_cents_per_1k" type="number" min="0" value="2" required /></label>
-            <button type="submit">保存渠道</button>
-          </form>
-          <p class="error" id="channelError"></p>
+      <!-- Account info -->
+      <section class=”section hidden” id=”accountPanel”>
+        <div class=”info-row”>
+          <span class=”badge” id=”meEmail”>--</span>
+          <span class=”badge badge-green” id=”meBalanceBadge”>Balance: 0</span>
+        </div>
+        <div class=”row” style=”margin-top: 8px;”>
+          <button class=”ghost” id=”refreshButton” type=”button”>Refresh</button>
+        </div>
+        <p class=”notice” style=”margin-top: 16px;”>Billing unit is “cents”. 123 cents = 1.23 yuan. Powered by Cloudflare Workers + D1.</p>
+      </section>
+
+      <hr class=”divider hidden” id=”mainDivider” />
+
+      <!-- Main Panel -->
+      <section class=”hidden” id=”mainPanel”>
+
+        <!-- Channel Upload -->
+        <div class=”section”>
+          <div class=”panel”>
+            <h2>Add Channel</h2>
+            <form id=”channelForm”>
+              <div class=”grid”>
+                <label>Name<input name=”name” required placeholder=”e.g. OpenAI Official” /></label>
+                <label>Provider
+                  <select name=”provider”>
+                    <option value=”openai”>OpenAI</option>
+                    <option value=”anthropic”>Anthropic</option>
+                  </select>
+                </label>
+                <label>Base URL<input name=”base_url” placeholder=”Default: official API address” /></label>
+                <label>Endpoint Path<input name=”endpoint_path” placeholder=”/v1/chat/completions” /></label>
+                <label>Default Model<input name=”default_model” placeholder=”e.g. gpt-4.1-mini” /></label>
+                <label>API Key<input name=”api_key” type=”password” required /></label>
+                <label>Input Price (cents / 1K tokens)<input name=”price_input_cents_per_1k” type=”number” min=”0” value=”1” required /></label>
+                <label>Output Price (cents / 1K tokens)<input name=”price_output_cents_per_1k” type=”number” min=”0” value=”2” required /></label>
+              </div>
+              <button type=”submit” style=”margin-top: 16px;”>Save Channel</button>
+            </form>
+            <p class=”error” id=”channelError”></p>
+          </div>
         </div>
 
-        <div class="panel">
-          <h2>可调用渠道</h2>
-          <div class="cards" id="channelsList"></div>
+        <!-- Available Channels -->
+        <div class=”section”>
+          <h2>Available Channels</h2>
+          <div class=”cards” id=”channelsList”></div>
         </div>
 
-        <div class="panel">
-          <h2>统一代理调用</h2>
-          <form id="proxyForm">
-            <label>选择渠道
-              <select name="channel_id" id="proxyChannelSelect"></select>
-            </label>
-            <label>JSON 请求体
-              <textarea name="payload" id="payloadInput">{ "messages": [{ "role": "user", "content": "你好" }] }</textarea>
-            </label>
-            <button type="submit">发起调用</button>
-          </form>
-          <p class="error" id="proxyError"></p>
-          <pre id="proxyOutput">等待调用结果...</pre>
+        <!-- Proxy -->
+        <div class=”section”>
+          <div class=”panel”>
+            <h2>Proxy Request</h2>
+            <form id=”proxyForm”>
+              <label>Channel
+                <select name=”channel_id” id=”proxyChannelSelect”></select>
+              </label>
+              <label>JSON Payload
+                <textarea name=”payload” id=”payloadInput”>{ “messages”: [{ “role”: “user”, “content”: “Hello” }] }</textarea>
+              </label>
+              <button type=”submit”>Send Request</button>
+            </form>
+            <p class=”error” id=”proxyError”></p>
+            <pre id=”proxyOutput” style=”margin-top: 16px;”>Awaiting response...</pre>
+          </div>
         </div>
 
-        <div class="panel">
-          <h2>我的渠道</h2>
-          <div class="cards" id="myChannelsList"></div>
+        <!-- My Channels -->
+        <div class=”section”>
+          <h2>My Channels</h2>
+          <div class=”cards” id=”myChannelsList”></div>
         </div>
 
-        <div class="panel">
-          <h2>最近调用</h2>
-          <div class="cards" id="usageList"></div>
+        <!-- Recent Usage -->
+        <div class=”section”>
+          <h2>Recent Usage</h2>
+          <div class=”cards” id=”usageList”></div>
         </div>
 
-        <div class="panel hidden" id="adminPanel">
-          <h2>管理员充值</h2>
-          <form id="creditForm">
-            <label>用户
-              <select name="user_id" id="creditUserSelect"></select>
-            </label>
-            <label>变动额度（分，可负数）<input name="amount_cents" type="number" value="1000" required /></label>
-            <button type="submit">提交额度变更</button>
-          </form>
-          <p class="error" id="creditError"></p>
-          <div class="cards" id="usersList" style="margin-top: 14px;"></div>
+        <!-- Admin Panel -->
+        <div class=”section hidden” id=”adminPanel”>
+          <div class=”panel”>
+            <h2>Admin \u2014 Credit Management</h2>
+            <form id=”creditForm”>
+              <div class=”grid”>
+                <label>User
+                  <select name=”user_id” id=”creditUserSelect”></select>
+                </label>
+                <label>Amount (cents, can be negative)<input name=”amount_cents” type=”number” value=”1000” required /></label>
+              </div>
+              <button type=”submit” style=”margin-top: 16px;”>Apply Credit</button>
+            </form>
+            <p class=”error” id=”creditError”></p>
+          </div>
+          <div style=”margin-top: 16px;”>
+            <div class=”table-wrap”>
+              <table>
+                <thead>
+                  <tr><th>Email</th><th>Role</th><th>Balance</th></tr>
+                </thead>
+                <tbody id=”usersList”></tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
       </section>
     </main>
 
     <script>
-      const state = {
-        me: null,
-        channels: [],
-        users: [],
-      };
-
+      const state = { me: null, channels: [], users: [] };
       const el = (id) => document.getElementById(id);
 
       async function api(path, options = {}) {
         const response = await fetch(path, {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {}),
-          },
+          credentials: “include”,
+          headers: { “Content-Type”: “application/json”, ...(options.headers || {}) },
           ...options,
         });
         const data = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          throw new Error(data.error || "请求失败");
-        }
+        if (!response.ok) throw new Error(data.error || “Request failed”);
         return data;
       }
 
       function centsToText(cents) {
-        return (Number(cents || 0) / 100).toFixed(2) + " 元";
+        return (Number(cents || 0) / 100).toFixed(2) + “ yuan”;
       }
 
       async function refreshApp() {
         try {
-          const me = await api("/api/me", { method: "GET" });
+          const me = await api(“/api/me”, { method: “GET” });
           state.me = me.user;
           state.myChannels = me.my_channels || [];
           state.usageLogs = me.usage_logs || [];
-          const channelData = await api("/api/channels", { method: "GET" });
+          const channelData = await api(“/api/channels”, { method: “GET” });
           state.channels = channelData.channels || [];
           if (state.me.is_admin) {
-            const admin = await api("/api/admin/users", { method: "GET" });
+            const admin = await api(“/api/admin/users”, { method: “GET” });
             state.users = admin.users || [];
           } else {
             state.users = [];
@@ -1081,155 +1349,146 @@ function renderAppHtml() {
 
       function render() {
         const loggedIn = Boolean(state.me);
-        el("authPanel").classList.toggle("hidden", loggedIn);
-        el("accountPanel").classList.toggle("hidden", !loggedIn);
-        el("mainPanel").classList.toggle("hidden", !loggedIn);
+        el(“authPanel”).classList.toggle(“hidden”, loggedIn);
+        el(“accountPanel”).classList.toggle(“hidden”, !loggedIn);
+        el(“mainDivider”).classList.toggle(“hidden”, !loggedIn);
+        el(“mainPanel”).classList.toggle(“hidden”, !loggedIn);
+        el(“logoutButton”).classList.toggle(“hidden”, !loggedIn);
+        el(“headerBalance”).classList.toggle(“hidden”, !loggedIn);
 
-        if (!loggedIn) {
-          return;
-        }
+        if (!loggedIn) return;
 
-        el("meEmail").textContent = state.me.email;
-        el("meBalance").textContent = "额度: " + centsToText(state.me.balance_cents);
-        el("meAdmin").classList.toggle("hidden", !state.me.is_admin);
-        el("adminPanel").classList.toggle("hidden", !state.me.is_admin);
+        el(“meEmail”).textContent = state.me.email;
+        el(“meBalanceBadge”).textContent = “Balance: “ + centsToText(state.me.balance_cents);
+        el(“headerBalance”).textContent = centsToText(state.me.balance_cents);
+        el(“meAdmin”).classList.toggle(“hidden”, !state.me.is_admin);
+        el(“adminPanel”).classList.toggle(“hidden”, !state.me.is_admin);
 
-        el("channelsList").innerHTML = state.channels.map((channel) => \`
-          <div class="card">
-            <strong>\${channel.name}</strong>
-            <div class="meta">提供者：\${channel.owner_email} | \${channel.provider} | \${channel.default_model || "未设默认模型"}</div>
-            <div class="meta">地址：\${channel.base_url}\${channel.endpoint_path}</div>
-            <div class="meta">价格：输入 \${channel.price_input_cents_per_1k} 分 / 1K，输出 \${channel.price_output_cents_per_1k} 分 / 1K</div>
-          </div>
-        \`).join("") || '<div class="card">暂无可用渠道</div>';
+        el(“channelsList”).innerHTML = state.channels.length
+          ? state.channels.map(c => \`
+            <div class=”card”>
+              <div class=”card-title”>\${c.name}</div>
+              <div class=”meta”>Owner: <span>\${c.owner_email}</span> &middot; <span>\${c.provider}</span> &middot; <span>\${c.default_model || “default unset”}</span></div>
+              <div class=”meta”>\${c.base_url}\${c.endpoint_path}</div>
+              <div class=”meta”>Input: <span>\${c.price_input_cents_per_1k} cents/1K</span> &middot; Output: <span>\${c.price_output_cents_per_1k} cents/1K</span></div>
+            </div>
+          \`).join(“”)
+          : '<div class=”empty”>No channels available</div>';
 
-        el("myChannelsList").innerHTML = (state.myChannels || []).map((channel) => \`
-          <div class="card">
-            <strong>\${channel.name}</strong>
-            <div class="meta">\${channel.provider} | \${channel.default_model || "未设默认模型"}</div>
-            <div class="meta">\${channel.base_url}\${channel.endpoint_path}</div>
-          </div>
-        \`).join("") || '<div class="card">你还没有上传渠道</div>';
+        el(“myChannelsList”).innerHTML = (state.myChannels || []).length
+          ? state.myChannels.map(c => \`
+            <div class=”card”>
+              <div class=”card-title”>\${c.name}</div>
+              <div class=”meta”><span>\${c.provider}</span> &middot; <span>\${c.default_model || “default unset”}</span></div>
+              <div class=”meta”>\${c.base_url}\${c.endpoint_path}</div>
+            </div>
+          \`).join(“”)
+          : '<div class=”empty”>You haven\\'t added any channels</div>';
 
-        el("usageList").innerHTML = (state.usageLogs || []).map((item) => \`
-          <div class="card">
-            <strong>#\${item.id} \${item.channel_name}</strong>
-            <div class="meta">模型：\${item.model || "未记录"} | 输入：\${item.input_tokens} | 输出：\${item.output_tokens}</div>
-            <div class="meta">扣费：\${centsToText(item.total_cost_cents)} | 状态：\${item.status}</div>
-          </div>
-        \`).join("") || '<div class="card">暂无调用记录</div>';
+        el(“usageList”).innerHTML = (state.usageLogs || []).length
+          ? state.usageLogs.map(item => \`
+            <div class=”card”>
+              <div class=”card-title”>#\${item.id} \${item.channel_name}</div>
+              <div class=”meta”>Model: <span>\${item.model || “unknown”}</span> &middot; In: <span>\${item.input_tokens}</span> &middot; Out: <span>\${item.output_tokens}</span></div>
+              <div class=”meta”>Cost: <span>\${centsToText(item.total_cost_cents)}</span> &middot; Status: <span>\${item.status}</span></div>
+            </div>
+          \`).join(“”)
+          : '<div class=”empty”>No usage logs yet</div>';
 
-        const options = state.channels.map((channel) => \`<option value="\${channel.id}">\${channel.name} (#\${channel.id})</option>\`).join("");
-        el("proxyChannelSelect").innerHTML = options;
+        el(“proxyChannelSelect”).innerHTML = state.channels.map(c => \`<option value=”\${c.id}”>\${c.name} (#\${c.id})</option>\`).join(“”);
 
         if (state.me.is_admin) {
-          const userOptions = state.users.map((user) => \`<option value="\${user.id}">\${user.email} (\${centsToText(user.balance_cents)})</option>\`).join("");
-          el("creditUserSelect").innerHTML = userOptions;
-          el("usersList").innerHTML = state.users.map((user) => \`
-            <div class="card">
-              <strong>\${user.email}</strong>
-              <div class="meta">角色：\${user.is_admin ? "管理员" : "用户"} | 余额：\${centsToText(user.balance_cents)}</div>
-            </div>
-          \`).join("");
+          el(“creditUserSelect”).innerHTML = state.users.map(u => \`<option value=”\${u.id}”>\${u.email} (\${centsToText(u.balance_cents)})</option>\`).join(“”);
+          el(“usersList”).innerHTML = state.users.map(u => \`
+            <tr>
+              <td>\${u.email}</td>
+              <td>\${u.is_admin ? “Admin” : “User”}</td>
+              <td>\${centsToText(u.balance_cents)}</td>
+            </tr>
+          \`).join(“”);
         }
       }
 
-      el("registerForm").addEventListener("submit", async (event) => {
+      el(“registerForm”).addEventListener(“submit”, async (event) => {
         event.preventDefault();
-        el("authError").textContent = "";
+        el(“authError”).textContent = “”;
         const form = new FormData(event.target);
         try {
-          await api("/api/auth/register", {
-            method: "POST",
-            body: JSON.stringify({
-              email: form.get("email"),
-              password: form.get("password"),
-            }),
+          await api(“/api/auth/register”, {
+            method: “POST”,
+            body: JSON.stringify({ email: form.get(“email”), password: form.get(“password”) }),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) {
-          el("authError").textContent = error.message;
-        }
+        } catch (error) { el(“authError”).textContent = error.message; }
       });
 
-      el("loginForm").addEventListener("submit", async (event) => {
+      el(“loginForm”).addEventListener(“submit”, async (event) => {
         event.preventDefault();
-        el("authError").textContent = "";
+        el(“authError”).textContent = “”;
         const form = new FormData(event.target);
         try {
-          await api("/api/auth/login", {
-            method: "POST",
-            body: JSON.stringify({
-              email: form.get("email"),
-              password: form.get("password"),
-            }),
+          await api(“/api/auth/login”, {
+            method: “POST”,
+            body: JSON.stringify({ email: form.get(“email”), password: form.get(“password”) }),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) {
-          el("authError").textContent = error.message;
-        }
+        } catch (error) { el(“authError”).textContent = error.message; }
       });
 
-      el("channelForm").addEventListener("submit", async (event) => {
+      el(“channelForm”).addEventListener(“submit”, async (event) => {
         event.preventDefault();
-        el("channelError").textContent = "";
+        el(“channelError”).textContent = “”;
         const form = new FormData(event.target);
         try {
-          await api("/api/channels", {
-            method: "POST",
+          await api(“/api/channels”, {
+            method: “POST”,
             body: JSON.stringify(Object.fromEntries(form.entries())),
           });
           event.target.reset();
           await refreshApp();
-        } catch (error) {
-          el("channelError").textContent = error.message;
-        }
+        } catch (error) { el(“channelError”).textContent = error.message; }
       });
 
-      el("proxyForm").addEventListener("submit", async (event) => {
+      el(“proxyForm”).addEventListener(“submit”, async (event) => {
         event.preventDefault();
-        el("proxyError").textContent = "";
+        el(“proxyError”).textContent = “”;
         const form = new FormData(event.target);
         try {
-          const payload = JSON.parse(String(form.get("payload") || "{}"));
-          const data = await api("/api/proxy/" + form.get("channel_id"), {
-            method: "POST",
+          const payload = JSON.parse(String(form.get(“payload”) || “{}”));
+          const data = await api(“/api/proxy/” + form.get(“channel_id”), {
+            method: “POST”,
             body: JSON.stringify(payload),
           });
-          el("proxyOutput").textContent = JSON.stringify(data, null, 2);
+          el(“proxyOutput”).textContent = JSON.stringify(data, null, 2);
           await refreshApp();
-        } catch (error) {
-          el("proxyError").textContent = error.message;
-        }
+        } catch (error) { el(“proxyError”).textContent = error.message; }
       });
 
-      el("creditForm").addEventListener("submit", async (event) => {
+      el(“creditForm”).addEventListener(“submit”, async (event) => {
         event.preventDefault();
-        el("creditError").textContent = "";
+        el(“creditError”).textContent = “”;
         const form = new FormData(event.target);
         try {
-          await api("/api/admin/credit", {
-            method: "POST",
+          await api(“/api/admin/credit”, {
+            method: “POST”,
             body: JSON.stringify({
-              user_id: Number(form.get("user_id")),
-              amount_cents: Number(form.get("amount_cents")),
+              user_id: Number(form.get(“user_id”)),
+              amount_cents: Number(form.get(“amount_cents”)),
             }),
           });
           await refreshApp();
-        } catch (error) {
-          el("creditError").textContent = error.message;
-        }
+        } catch (error) { el(“creditError”).textContent = error.message; }
       });
 
-      el("logoutButton").addEventListener("click", async () => {
-        await api("/api/auth/logout", { method: "POST", body: "{}" });
+      el(“logoutButton”).addEventListener(“click”, async () => {
+        await api(“/api/auth/logout”, { method: “POST”, body: “{}” });
         state.me = null;
         render();
       });
 
-      el("refreshButton").addEventListener("click", refreshApp);
+      el(“refreshButton”).addEventListener(“click”, refreshApp);
 
       refreshApp();
     </script>

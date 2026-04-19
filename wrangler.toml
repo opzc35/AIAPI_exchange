@@ -1,4 +1,4 @@
-name = "aiapi-exchange"
+name = "aiapi-exchangee"
 main = "src/worker.js"
 compatibility_date = "2026-04-19"
 

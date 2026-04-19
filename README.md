@@ -39,7 +39,7 @@ Cloudflare 官方现在支持 `Deploy to Cloudflare` 按钮，适用于 Workers 
 要让上面的按钮真正可点可用，你只需要把 README 里的占位地址替换成你公开仓库的真实地址，例如：
 
 ```md
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/<your-org>/<your-repo>)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://gitlab.com/opzc351/AIAPI_exchange)
 ```
 
 说明：

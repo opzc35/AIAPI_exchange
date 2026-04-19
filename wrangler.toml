@@ -5,4 +5,4 @@ compatibility_date = "2026-04-19"
 [[d1_databases]]
 binding = "DB"
 database_name = "aiapi-exchange"
-database_id = "replace-with-your-d1-database-id"
+database_id = "05b182a5-b8bc-4ded-b1af-d2138e8637df"

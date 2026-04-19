@@ -1,0 +1,19 @@
+{
+  "name": "aiapi-exchange",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/worker.js"
+  },
+  "cloudflare": {
+    "bindings": {
+      "APP_SECRET": {
+        "description": "Generate a long random secret for encrypting channel API keys and signing sessions. Example: `openssl rand -hex 32`."
+      },
+      "DB": {
+        "description": "D1 database used for users, sessions, channels, and usage logs. The Deploy to Cloudflare flow can auto-provision this binding from `wrangler.toml`."
+      }
+    }
+  }
+}
